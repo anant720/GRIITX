@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GRIITX Studios</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --charcoal: #222222;
+      --cream: #ede3d1;
+      --white: #ffffff;
+      --primary: #ede3d1;
+      --secondary: #222222;
+    }
+
+    * { margin:0; padding:0; box-sizing:border-box; font-family:'Montserrat', sans-serif; }
+    body { background: var(--cream); color: var(--secondary); overflow-x:hidden; scroll-behavior:smooth; }
+
+    header { display:flex; justify-content:space-between; align-items:center; padding:20px 30px; background: var(--cream); position:sticky; top:0; z-index:1000; transition:0.3s; }
+    header.scrolled { background: var(--secondary); color: var(--cream); }
+    header img.logo { height:55px; cursor:pointer; transition:0.3s; }
+    nav { display:flex; align-items:center; gap:8px; }
+    nav a { margin:0 12px; font-weight:600; color: var(--secondary); text-decoration:none; transition:0.3s; }
+    header.scrolled nav a { color: var(--cream); }
+    nav a:hover { color: #ff4c3b; }
+
+    /* Cart & icons */
+    .icons { display:flex; align-items:center; gap:12px; }
+    .icon-btn { background:transparent; border:none; cursor:pointer; font-size:1rem; position:relative; }
+    .cart-count { position:absolute; top:-6px; right:-6px; background:#ff4c3b; color:#fff; font-size:0.75rem; padding:4px 6px; border-radius:50px; }
+
+    /* hamburger */
+    .hamburger { display:none; flex-direction:column; gap:4px; cursor:pointer; }
+    .hamburger span { width:26px; height:3px; background:var(--secondary); display:block; border-radius:3px; }
+
+    /* HERO SECTION */
+    .hero {
+      width:100%; 
+      height:80vh; 
+      display:flex; 
+      justify-content:center; 
+      align-items:center; 
+      text-align:center;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.45), rgba(0,0,0,0.45)), 
+                  url('mybg.jpg') no-repeat center center/cover;
+      position: relative; 
+      overflow: hidden;
+    }
+    .hero h2 { 
+      font-size:3rem; 
+      text-transform:uppercase; 
+      letter-spacing:4px; 
+      color: var(--white); 
+      z-index:1; 
+      animation: fadeInUp 1.2s ease forwards; 
+    }
+
+    @keyframes fadeInUp { 
+      0% { opacity:0; transform: translateY(50px); } 
+      100% { opacity:1; transform: translateY(0); } 
+    }
+
+    section { padding: 60px 30px; }
+    .separator { width:80px; height:3px; background:#ff4c3b; margin:40px auto; border-radius:2px; }
+
+    .products { display:grid; grid-template-columns:repeat(auto-fit, minmax(260px,1fr)); gap:24px; margin-bottom:30px; }
+    .card {
+      background: var(--cream); border-radius:18px; overflow:hidden; cursor:pointer;
+      position:relative; transition: transform 0.4s ease, box-shadow 0.4s ease; padding-bottom:10px;
+    }
+    .card:hover { transform: translateY(-6px); box-shadow:0 12px 30px rgba(0,0,0,0.25); }
+    .card img { width:100%; height:320px; object-fit:contain; transition: transform 0.5s ease; border-radius: 18px; background: var(--cream); }
+    .card h3 { padding:12px; text-align:center; font-weight:700; font-size:1rem; color: var(--secondary); }
+    .card .price { text-align:center; font-weight:700; color:#ff4c3b; margin-bottom:8px; }
+
+    /* Modal */
+    .modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.95); justify-content:center; align-items:center; z-index:2000; padding:20px; }
+    .modal-content { background: var(--cream); padding:20px; border-radius:16px; max-width:820px; width:100%; position:relative; text-align:center; }
+    .modal video { width:100%; max-height:420px; border-radius:12px; margin-bottom:12px; background: var(--cream); }
+    .modal h2 { margin-bottom:6px; color: var(--secondary); }
+    .modal h3 { margin-bottom:10px; color:#ff4c3b; }
+    .modal ul { margin-bottom:12px; text-align:left; padding-left:20px; color: #555; }
+    .modal ul li { margin-bottom:6px; }
+    .modal .actions { display:flex; gap:10px; justify-content:center; flex-wrap:wrap; }
+    .modal button { padding:10px 20px; background:#ff4c3b; color:var(--white); border:none; border-radius:30px; font-weight:600; cursor:pointer; transition:0.2s; }
+    .modal .secondary-btn { background:transparent; border:2px solid var(--secondary); color:var(--secondary); }
+    .modal button:hover { opacity:0.95; }
+    .close { position:absolute; top:10px; right:14px; font-size:1.6rem; cursor:pointer; color: var(--secondary); }
+
+    .about, .contact { max-width:900px; margin:auto; text-align:center; }
+    .about p, .contact p { margin-top:20px; font-size:1.05rem; color:#555; line-height:1.6; }
+    .contact a { display:inline-block; margin:12px; padding:10px 18px; background:#ff4c3b; color:#fff; border-radius:20px; text-decoration:none; font-weight:600; transition:0.3s; }
+    .contact a:hover { background: var(--secondary); color: var(--cream); }
+    footer { text-align:center; padding:20px; background: var(--secondary); color: var(--cream); font-size:0.95rem; }
+
+    #scrollTopBtn { position:fixed; bottom:40px; right:40px; padding:12px 18px; background:#ff4c3b; color:#fff; border:none; border-radius:50px; cursor:pointer; font-size:1rem; display:none; z-index:100; transition:0.3s; }
+    #scrollTopBtn:hover { background: var(--secondary); color: var(--cream); }
+
+    /* Cart sidebar */
+    .cart-sidebar { position:fixed; right:-420px; top:0; height:100vh; width:380px; background:var(--white); box-shadow: -8px 0 30px rgba(0,0,0,0.2); z-index:3000; transition: right 0.35s ease; padding:20px; overflow:auto; }
+    .cart-sidebar.open { right:0; }
+    .cart-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
+    .cart-items { display:flex; flex-direction:column; gap:12px; margin-bottom:12px; }
+    .cart-item { display:flex; gap:10px; align-items:center; background:var(--cream); padding:8px; border-radius:12px; }
+    .cart-item img { width:70px; height:70px; object-fit:contain; border-radius:8px; }
+    .cart-item .meta { flex:1; }
+    .qty-controls { display:flex; gap:6px; align-items:center; }
+    .small-btn { padding:6px 10px; border-radius:8px; border:none; cursor:pointer; font-weight:600; }
+
+    .cart-footer { margin-top:12px; }
+    .cart-footer .total { font-weight:800; margin-bottom:10px; }
+
+    @media(max-width:768px){
+      header { flex-direction:row; gap:8px; padding:12px 16px; }
+      nav { display:none; }
+      .hamburger { display:flex; }
+      .hero h2 { font-size:2rem; }
+      .cart-sidebar { width:100%; right:-100%; }
+      .cart-sidebar.open { right:0; }
+    }
+
+  </style>
+</head>
+<body>
+
+<header>
+  <div style="display:flex; align-items:center; gap:14px;">
+    <img src="3.png" alt="GRIITX Logo" class="logo" onclick="window.location='#home'">
+    <div class="hamburger" id="hamburger" aria-label="Open menu" tabindex="0">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+
+  <nav id="mainNav">
+    <a href="#home">Home</a>
+    <a href="#shop">Shop</a>
+    <a href="#about">About</a>
+    <a href="#contact">Contact</a>
+  </nav>
+
+  <div class="icons">
+    <button class="icon-btn" id="searchBtn" title="Search">🔍</button>
+    <button class="icon-btn" id="cartBtn" title="Cart">🛒
+      <span class="cart-count" id="cartCount">0</span>
+    </button>
+  </div>
+</header>
+
+<section class="hero" id="home">
+  <h2>UNLEASH THE GRIIT.</h2>
+</section>
+
+<div class="separator"></div>
+
+<section id="shop">
+  <h2 style="text-align:center; margin-bottom:30px;">Our Collection</h2>
+
+  <div class="products">
+
+    <!-- Sanji Card -->
+    <div class="card" data-modal="sanjiModal" data-id="sanji" data-name="Sanji Oversized T-Shirt – Purple Grunge Edition" data-price="1599">
+      <img src="0116.png" alt="Sanji T-Shirt">
+      <h3>Sanji Oversized T-Shirt – Purple Grunge Edition</h3>
+      <p class="price">₹1,599</p>
+    </div>
+
+    <!-- Gyomei Card -->
+    <div class="card" data-modal="gyomeiModal" data-id="gyomei" data-name="Gyomei Oversized T-Shirt – Black Acid Wash Edition" data-price="1599">
+      <img src="0118.png" alt="Gyomei T-Shirt">
+      <h3>Gyomei Oversized T-Shirt – Black Acid Wash Edition</h3>
+      <p class="price">₹1,599</p>
+    </div>
+
+    <!-- Rengoku Card -->
+    <div class="card" data-modal="rengokuModal" data-id="rengoku" data-name="Rengoku Oversized T-Shirt – Red & Black Tie-Dye Edition" data-price="1599">
+      <img src="0110.png" alt="Rengoku T-Shirt">
+      <h3>Rengoku Oversized T-Shirt – Red & Black Tie-Dye Edition</h3>
+      <p class="price">₹1,599</p>
+    </div>
+
+    <!-- Tanjiro Card -->
+    <div class="card" data-modal="tanjiroModal" data-id="tanjiro" data-name="Tanjiro Oversized T-Shirt – Solid Black Edition" data-price="1599">
+      <img src="0115.png" alt="Tanjiro T-Shirt">
+      <h3>Tanjiro Oversized T-Shirt – Solid Black Edition</h3>
+      <p class="price">₹1,599</p>
+    </div>
+
+  </div>
+
+</section>
+
+<div class="separator"></div>
+
+<!-- Sanji Modal -->
+<div class="modal" id="sanjiModal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal('sanjiModal')">&times;</span>
+    <video autoplay muted loop>
+      <source src="SANJI.mp4" type="video/mp4">
+    </video>
+    <h2>🔥 Sanji Oversized T-Shirt – Purple Grunge Edition (Limited!)</h2>
+    <h3>₹1,599</h3>
+    <ul>
+      <li>Exclusive Design: Iconic Sanji back print</li>
+      <li>Color: Deep Purple Grunge – bold & edgy</li>
+      <li>Material: 100% premium cotton</li>
+      <li>Fabric Weight: 250 GSM – soft yet durable</li>
+      <li>Fit: Oversized, relaxed one-piece fit</li>
+      <li>Limited Stock: Grab yours before it’s gone!</li>
+      <li>Style: Streetwear-ready, perfect for standout looks</li>
+    </ul>
+    <div class="actions">
+      <button onclick="addCurrentToCart('sanji')">Add to Cart</button>
+      <button class="secondary-btn" onclick="buySingleItem('sanji')">Buy on WhatsApp</button>
+    </div>
+  </div>
+</div>
+
+<!-- Gyomei Modal -->
+<div class="modal" id="gyomeiModal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal('gyomeiModal')">&times;</span>
+    <video autoplay muted loop>
+      <source src="GYYOMEIN.mp4" type="video/mp4">
+    </video>
+    <h2>⚡ Gyomei Oversized T-Shirt – Black Acid Wash Edition (Limited!)</h2>
+    <h3>₹1,599</h3>
+    <ul>
+      <li>Back Print: Iconic Gyomei – bold & powerful design</li>
+      <li>Color: Black Acid Wash – edgy streetwear vibe</li>
+      <li>Fabric: 100% Premium Cotton</li>
+      <li>Weight: 250 GSM – thick & durable</li>
+      <li>Fit: Oversized, relaxed one-piece style</li>
+      <li>Limited Edition – exclusive GRX drop</li>
+    </ul>
+    <div class="actions">
+      <button onclick="addCurrentToCart('gyomei')">Add to Cart</button>
+      <button class="secondary-btn" onclick="buySingleItem('gyomei')">Buy on WhatsApp</button>
+    </div>
+  </div>
+</div>
+
+<!-- Rengoku Modal -->
+<div class="modal" id="rengokuModal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal('rengokuModal')">&times;</span>
+    <video autoplay muted loop>
+      <source src="RENGOKU.mp4" type="video/mp4">
+    </video>
+    <h2>🔥 Rengoku Oversized T-Shirt – Red & Black Tie-Dye Edition | BY GRX</h2>
+    <h3>₹1,599</h3>
+    <ul>
+      <li>Back Print: Fierce Rengoku – flame-inspired artwork</li>
+      <li>Texture: Red & Black Tie-Dye – fiery streetwear look</li>
+      <li>Fabric: 100% Premium Cotton</li>
+      <li>Weight: 250 GSM – heavy & lasting quality</li>
+      <li>Fit: Oversized, relaxed one-piece silhouette</li>
+      <li>Limited Stock – GRX exclusive fire drop</li>
+    </ul>
+    <div class="actions">
+      <button onclick="addCurrentToCart('rengoku')">Add to Cart</button>
+      <button class="secondary-btn" onclick="buySingleItem('rengoku')">Buy on WhatsApp</button>
+    </div>
+  </div>
+</div>
+
+<!-- Tanjiro Modal -->
+<div class="modal" id="tanjiroModal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal('tanjiroModal')">&times;</span>
+    <video autoplay muted loop>
+      <source src="TANJIRO.mp4" type="video/mp4">
+    </video>
+    <h2>🌑 Tanjiro Oversized T-Shirt – Solid Black Edition | BY GRX</h2>
+    <h3>₹1,599</h3>
+    <ul>
+      <li>Back Print: Iconic Tanjiro – sharp & determined design</li>
+      <li>Color: Solid Black – timeless & versatile</li>
+      <li>Fabric: 100% Premium Cotton</li>
+      <li>Weight: 250 GSM – thick & premium feel</li>
+      <li>Fit: Oversized, relaxed one-piece style</li>
+      <li>Exclusive Edition – limited GRX release</li>
+    </ul>
+    <div class="actions">
+      <button onclick="addCurrentToCart('tanjiro')">Add to Cart</button>
+      <button class="secondary-btn" onclick="buySingleItem('tanjiro')">Buy on WhatsApp</button>
+    </div>
+  </div>
+</div>
+
+<!-- Cart Sidebar -->
+<aside class="cart-sidebar" id="cartSidebar" aria-hidden="true">
+  <div class="cart-header">
+    <h3>Your Cart</h3>
+    <button class="icon-btn" onclick="toggleCart()">Close ✕</button>
+  </div>
+
+  <div class="cart-items" id="cartItems"></div>
+
+  <div class="cart-footer">
+    <div class="total" id="cartTotal">Total: ₹0</div>
+    <div style="display:flex; gap:8px; flex-wrap:wrap;">
+      <button onclick="checkoutWhatsApp()" id="checkoutBtn">Checkout on WhatsApp</button>
+      <button class="secondary-btn" onclick="clearCart()">Clear Cart</button>
+    </div>
+  </div>
+</aside>
+
+<section class="about" id="about">
+  <h2>About GRIITX</h2>
+  <p>GRIITX is not just a clothing label, it’s a culture. Born in Pune, designed for the streets of India and beyond. Our oversized fits, bold designs, and premium fabrics redefine comfort and individuality. Each piece is made for creators, dreamers, and hustlers.</p>
+</section>
+
+<div class="separator"></div>
+<section class="contact" id="contact">
+  <h2>Contact Us</h2>
+  <p>Reach out to us via WhatsApp, Instagram, or Email for orders and inquiries.</p>
+  
+  <!-- WhatsApp -->
+  <a href="https://wa.me/917597056872" target="_blank">
+    <img src="https://cdn-icons-png.flaticon.com/512/1384/1384055.png" 
+         alt="WhatsApp" style="height:28px; width:28px; margin:0 8px;">
+  </a>
+
+  <!-- Instagram -->
+  <a href="https://www.instagram.com/griitxstores?igsh=enljNHR3dnE4enZj" target="_blank">
+    <img src="https://cdn-icons-png.flaticon.com/512/1384/1384063.png" 
+         alt="Instagram" style="height:28px; width:28px; margin:0 8px;">
+  </a>
+
+  <!-- Email -->
+  <a href="mailto:griitxstudios@gmail.com">
+    <img src="https://cdn-icons-png.flaticon.com/512/732/732200.png" 
+         alt="Email" style="height:28px; width:28px; margin:0 8px;">
+  </a>
+</section>
+
+<footer>
+  <p>© 2025 GRIITX Studios. All Rights Reserved.</p>
+</footer>
+
+<button id="scrollTopBtn" onclick="scrollToTop()">↑</button>
+
+<script>
+// ========== CONFIG ==========
+// Change this to your WhatsApp number (international format, no +)
+const WHATSAPP_NUMBER = '917597056872';
+
+// Product catalog (can be expanded or moved to JSON file)
+const PRODUCTS = {
+  sanji: { id: 'sanji', name: 'Sanji Oversized T-Shirt – Purple Grunge Edition', price: 1599, img:'0116.png' },
+  gyomei: { id: 'gyomei', name: 'Gyomei Oversized T-Shirt – Black Acid Wash Edition', price: 1599, img:'0118.png' },
+  rengoku: { id: 'rengoku', name: 'Rengoku Oversized T-Shirt – Red & Black Tie-Dye Edition', price: 1599, img:'0110.png' },
+  tanjiro: { id: 'tanjiro', name: 'Tanjiro Oversized T-Shirt – Solid Black Edition', price: 1599, img:'0115.png' }
+};
+
+// ========== CART LOGIC ==========
+let cart = JSON.parse(localStorage.getItem('griitx_cart') || '{}');
+
+function saveCart(){
+  localStorage.setItem('griitx_cart', JSON.stringify(cart));
+  renderCart();
+}
+
+function addToCart(productId, qty = 1){
+  if(!PRODUCTS[productId]) return;
+  if(!cart[productId]) cart[productId] = { ...PRODUCTS[productId], qty:0 };
+  cart[productId].qty += qty;
+  saveCart();
+}
+
+function removeFromCart(productId){
+  delete cart[productId];
+  saveCart();
+}
+
+function updateQty(productId, qty){
+  if(!cart[productId]) return;
+  cart[productId].qty = Math.max(1, qty);
+  saveCart();
+}
+
+function clearCart(){
+  cart = {};
+  saveCart();
+}
+
+function cartItemCount(){
+  return Object.values(cart).reduce((s,i)=>s + (i.qty||0), 0);
+}
+
+function cartTotalAmount(){
+  return Object.values(cart).reduce((s,i)=>s + (i.qty * i.price), 0);
+}
+
+function renderCart(){
+  const cartItemsEl = document.getElementById('cartItems');
+  cartItemsEl.innerHTML = '';
+  const items = Object.values(cart);
+  if(items.length === 0){
+    cartItemsEl.innerHTML = '<p style="color:#666;">Your cart is empty. Add items to start an order.</p>';
+  }
+
+  items.forEach(item =>{
+    const div = document.createElement('div');
+    div.className = 'cart-item';
+    div.innerHTML = `
+      <img src="${item.img}" alt="${item.name}">
+      <div class="meta">
+        <div style="font-weight:700;">${item.name}</div>
+        <div style="color:#ff4c3b; font-weight:700;">₹${item.price}</div>
+      </div>
+      <div style="display:flex; flex-direction:column; align-items:flex-end; gap:6px;">
+        <div class="qty-controls">
+          <button class="small-btn" onclick="changeQty('${item.id}', -1)">-</button>
+          <div style="padding:6px 10px; background:#fff; border-radius:8px; border:1px solid #ddd; min-width:34px; text-align:center;">${item.qty}</div>
+          <button class="small-btn" onclick="changeQty('${item.id}', 1)">+</button>
+        </div>
+        <button class="small-btn" style="background:transparent; border:1px solid #999;" onclick="removeFromCart('${item.id}')">Remove</button>
+      </div>
+    `;
+    cartItemsEl.appendChild(div);
+  });
+
+  document.getElementById('cartCount').textContent = cartItemCount();
+  document.getElementById('cartTotal').textContent = 'Total: ₹' + cartTotalAmount();
+}
+
+function changeQty(id, diff){
+  if(!cart[id]) return;
+  cart[id].qty = Math.max(1, cart[id].qty + diff);
+  saveCart();
+}
+
+// ========== UI & MODALS ==========
+
+// Open product modal when clicking card
+document.querySelectorAll('.card').forEach(card => {
+  card.addEventListener('click', () => {
+    const modalId = card.dataset.modal;
+    const modal = document.getElementById(modalId);
+    if(!modal) return;
+    modal.style.display = 'flex';
+
+    // Restart video when opening modal
+    const video = modal.querySelector('video');
+    if (video) { video.currentTime = 0; video.play(); }
+
+    // set current product id on modal for convenience
+    modal.dataset.current = card.dataset.id;
+  });
+});
+
+function closeModal(id){
+  const modal = document.getElementById(id);
+  if(!modal) return;
+  const video = modal.querySelector('video');
+  if (video) { video.pause(); video.currentTime = 0; }
+  modal.style.display = 'none';
+}
+
+// Close on outside click
+window.onclick = function(event){
+  document.querySelectorAll('.modal').forEach(modal => {
+    if(event.target == modal){
+      closeModal(modal.id);
+    }
+  });
+}
+
+// Scroll behaviour and scroll-to-top
+const scrollBtn = document.getElementById('scrollTopBtn');
+window.onscroll = function(){
+  if(document.body.scrollTop>200 || document.documentElement.scrollTop>200){
+    scrollBtn.style.display="block";
+    document.querySelector('header').classList.add('scrolled');
+  } else {
+    scrollBtn.style.display="none";
+    document.querySelector('header').classList.remove('scrolled');
+  }
+}
+function scrollToTop(){ window.scrollTo({top:0, behavior:'smooth'}); }
+
+// ========== CART UI Helpers ==========
+function addCurrentToCart(productId){
+  addToCart(productId, 1);
+  const modal = document.querySelector('.modal[style*="display: flex"]') || null;
+  // give feedback and close optional
+  alert('Added to cart');
+  if(modal) closeModal(modal.id);
+}
+
+function buySingleItem(productId){
+  // Opens WhatsApp with single item message
+  const product = PRODUCTS[productId];
+  if(!product) return;
+  const message = `Hi GRIITX, I want to place an order:%0A1x ${product.name} - ₹${product.price}%0A`;
+  const link = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+  window.open(link, '_blank');
+}
+
+// Cart toggle
+function toggleCart(){
+  const sidebar = document.getElementById('cartSidebar');
+  const isOpen = sidebar.classList.toggle('open');
+  sidebar.setAttribute('aria-hidden', !isOpen);
+}
+
+// Checkout to WhatsApp: builds message from cart items
+function checkoutWhatsApp(){
+  const items = Object.values(cart);
+  if(items.length === 0){ alert('Your cart is empty. Add items first.'); return; }
+
+  let message = `Hi GRIITX, I want to place an order:%0A`;
+  items.forEach((it, idx) =>{
+    message += `${idx+1}x ${it.name} - ₹${it.price} x ${it.qty} = ₹${it.price * it.qty}%0A`;
+  });
+  message += `%0ATotal: ₹${cartTotalAmount()}%0A%0AName:%0APhone:%0AAddress:%0APreferred%20Payment%20method:%0A`;
+
+  const link = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(decodeURIComponent(message))}`;
+  window.open(link, '_blank');
+}
+
+// initialize cart render
+renderCart();
+
+// ========== Header buttons & mobile menu ==========
+
+document.getElementById('cartBtn').addEventListener('click', toggleCart);
+
+const hamburger = document.getElementById('hamburger');
+hamburger.addEventListener('click', () => {
+  const nav = document.getElementById('mainNav');
+  if(nav.style.display === 'flex') nav.style.display = 'none'; else nav.style.display = 'flex';
+});
+
+// Close nav on link click (mobile)
+document.querySelectorAll('#mainNav a').forEach(a => {
+  a.addEventListener('click', function(e){
+    e.preventDefault();
+    document.querySelector(this.getAttribute('href')).scrollIntoView({behavior:'smooth'});
+    const nav = document.getElementById('mainNav');
+    if(window.innerWidth <= 768) nav.style.display = 'none';
+  });
+});
+
+// quick helper: add keyboard accessibility to hamburger
+hamburger.addEventListener('keypress', (e)=>{ if(e.key==='Enter') hamburger.click(); });
+
+// small search button placeholder - can be expanded
+document.getElementById('searchBtn').addEventListener('click', ()=>{ alert('Search coming soon!') });
+
+// Save cart periodically (in case of external changes)
+window.addEventListener('beforeunload', saveCart);
+
+</script>
+</body>
+</html>
